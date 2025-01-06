@@ -1,40 +1,57 @@
-extends RigidBody3D
+extends CharacterBody3D
+
+@export_category("States")
+var state = "None"
 
 @export_category("Camera")
-@export var mouse_sensitivity := 0.001
-@export var twist_input := 0.0
-@export var pitch_input := 0.0
-
-@onready var twist_pivot := $TwistPivot
-@onready var pitch_pivot := $TwistPivot/PitchPivot
+@onready var head = $Head
+@onready var cam = $Head/Camera3D
+@export var sensitivity := 0.001
 
 @export_category("Walking")
-@export var speed = 5.0
+@export var speed := 5.0
 
-# Called when the node enters the scene tree for the first time.
+@export_category("Jumping")
+@export var jump_velocity := 4.5
+@export var gravity := 9.8
+
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	var input := Vector3.ZERO
-	input.x = Input.get_axis("move_left", "move_right") 
-	input.z = Input.get_axis("move_forward", "move_backward") 
-	
-	apply_central_force(twist_pivot.basis * input * 240 * speed * delta)
-	
+func _process(delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		
-	twist_pivot.rotate_y(twist_input)
-	pitch_pivot.rotate_x(pitch_input)
-	pitch_pivot.rotation.x = clamp(pitch_pivot.rotation.x, deg_to_rad(-45), deg_to_rad(45))
-	
-	twist_input = 0.0
-	pitch_input = 0.0
+
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = jump_velocity
+
+	if Input.is_action_just_pressed("sprint"):
+		speed = 8
+	else:
+		speed = 5
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var direction = (head.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * speed
+		velocity.z = direction.z * speed
+	else:
+		velocity.x = 0.0
+		velocity.z = 0.0
+
+	move_and_slide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			twist_input = -event.relative.x * mouse_sensitivity
-			pitch_input = -event.relative.y * mouse_sensitivity
+			head.rotate_y(-event.relative.x * sensitivity)
+			cam.rotate_x(-event.relative.y * sensitivity)
+			cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
