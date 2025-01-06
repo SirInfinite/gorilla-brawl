@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwg3jasdh4u6o"]
+
+[ext_resource type="Script" path="res://Scripts/pause_menu.gd" id="1_r5bam"]
+[ext_resource type="Shader" path="res://Materials/PauseMenuV.gdshader" id="2_spcex"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5os0r"]
+shader = ExtResource("2_spcex")
+shader_parameter/blur_size = null
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r5bam")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_5os0r")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseLogic" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PauseLogic"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 330.0
+offset_top = 90.0
+offset_right = 830.0
+offset_bottom = 590.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseLogic/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Resume" type="Button" parent="PauseLogic/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 100
+text = "Resume"
+
+[node name="Options" type="Button" parent="PauseLogic/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 100
+text = "Options"
+
+[node name="Quit" type="Button" parent="PauseLogic/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 100
+text = "Quit
+"
+
+[connection signal="pressed" from="PauseLogic/MarginContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseLogic/MarginContainer/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="PauseLogic/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
