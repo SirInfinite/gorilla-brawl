@@ -8,6 +8,14 @@
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3vpqe")
+current_state = null
+sensitivity = null
+fov = null
+fov_change = null
+speed = null
+friction = null
+jump_velocity = null
+air_control = null
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_c0iwr")
