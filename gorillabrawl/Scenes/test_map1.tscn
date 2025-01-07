@@ -102,9 +102,11 @@ material = SubResource("StandardMaterial3D_n18is")
 [node name="Player" parent="." instance=ExtResource("1_m7meh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
-[node name="DebugLabels" parent="." instance=ExtResource("2_apu3l")]
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_q8mjp")]
 process_mode = 3
+
+[node name="DebugLabels" parent="." instance=ExtResource("2_apu3l")]
+
+[connection signal="debug_info" from="Player" to="DebugLabels" method="_on_player_debug_info"]
