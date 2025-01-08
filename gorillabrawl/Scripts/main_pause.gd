@@ -1,6 +1,6 @@
 extends Node3D
 
-@onready var pause_menu = $CanvasLayer/PauseMenu
+@onready var pause_menu = get_node("Player/CanvasLayer/PauseMenu")
 var paused = false
 
 # Called when the node enters the scene tree for the first time.

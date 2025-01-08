@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cidc8djtr1k5x"]
+[gd_scene load_steps=6 format=3 uid="uid://cidc8djtr1k5x"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_3vpqe"]
+[ext_resource type="PackedScene" uid="uid://vt24i54eww7w" path="res://Scenes/debug_labels.tscn" id="2_girxk"]
+[ext_resource type="PackedScene" uid="uid://r0o8m51p2awr" path="res://Scenes/pause_menu.tscn" id="3_iwj3a"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c0iwr"]
 
@@ -8,14 +10,6 @@
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3vpqe")
-current_state = null
-sensitivity = null
-fov = null
-fov_change = null
-speed = null
-friction = null
-jump_velocity = null
-air_control = null
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_c0iwr")
@@ -27,3 +21,12 @@ shape = SubResource("CapsuleShape3D_gn7o1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
+
+[node name="DebugLabels" parent="." instance=ExtResource("2_girxk")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_iwj3a")]
+
+[connection signal="debug_info" from="." to="DebugLabels" method="_on_player_debug_info"]

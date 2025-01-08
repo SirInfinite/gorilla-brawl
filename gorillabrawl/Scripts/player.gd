@@ -3,14 +3,18 @@ extends CharacterBody3D
 signal debug_info
 
 @export_category("States")
-enum PlayerState { IDLE, WALKING, SPRINTING, JUMPING, FALLING, CROUCHING, SLIDING }
-@export var current_state : PlayerState
+@export var isStanding := false
+@export var isWalking := false
+@export var isSprinting := false
+@export var isJumping := false
+@export var isCrouching := false
+@export var isSliding := false
 
 @export_category("References")
-@onready var head = $Head
-@onready var cam = $Head/Camera3D
-@onready var hitbox = $CollisionShape3D
-@onready var body = $MeshInstance3D
+@onready var head := $Head
+@onready var cam := $Head/Camera3D
+@onready var hitbox := $CollisionShape3D
+@onready var body := $MeshInstance3D
 
 @export_category("Camera")
 @export var sensitivity := 1.0
@@ -20,8 +24,9 @@ var mouse_movement := Vector2.ZERO
 
 @export_category("Walking")
 @export var speed := 0.0
-@export var friction := 10.0
-const SPEEDS = {
+@export var acceleration := 20.0
+@export var deceleration := 10.0
+const SPEEDS := {
 	"walk": 5.0,
 	"sprint": 8.0,
 	"crouch": 3.0,
@@ -30,6 +35,7 @@ const SPEEDS = {
 
 @export_category("Jumping")
 const gravity := 9.8 # m/s^2
+@export var gravity_mult := 1.0
 @export var jump_velocity := 4.5
 @export var air_control := 3.0
 
@@ -38,6 +44,7 @@ var fps : float
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	velocity = Vector3.ZERO
 
 func _process(_delta : float):
 	fps = Engine.get_frames_per_second()
@@ -46,13 +53,12 @@ func _physics_process(delta: float):
 	handle_movement(delta)
 	handle_jumping(delta)
 	handle_state()
-	handle_state_behavior(current_state)
+	handle_state_behavior()
 	handle_fov(delta)
 	
 	move_and_slide()
 	
 	emit_debug()
-	mouse_movement = Vector2.ZERO
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -60,39 +66,65 @@ func _unhandled_input(event: InputEvent) -> void:
 			handle_mouselook(event)
 			mouse_movement = event.relative
 
-func is_state(state: PlayerState) -> bool:
-	return current_state == state
+func state_to_str():
+	if isStanding:
+		return "isStanding"
+	if isWalking:
+		return "isWalking"
+	if isSprinting:
+		return "isSprinting"
+	if isJumping:
+		return "isJumping"
+	if isCrouching:
+		return "isCrouching"
+	if isSliding:
+		return "isSliding"
 
-func handle_state_behavior(state: PlayerState):
-	match state:
-		PlayerState.IDLE:
-			speed = 0.0
-			handle_height(false)
-			return "IDLE"
-		PlayerState.WALKING:
-			speed = SPEEDS["walk"]
-			handle_height(false)
-			return "WALKING"
-		PlayerState.SPRINTING:
-			speed = SPEEDS["sprint"]
-			return "SPRINTING"
-		PlayerState.JUMPING:
-			return "JUMPING"
-		PlayerState.FALLING:
-			return "FALLING"
-		PlayerState.CROUCHING:
-			speed = SPEEDS["crouch"]
-			handle_height(true)
-			return "CROUCHING"
-		PlayerState.SLIDING:
-			return "SLIDING"
+func handle_state():
+	isStanding = false
+	isWalking = false
+	isSprinting = false
+	isJumping = false
+	isCrouching = false
+	isSliding = false
+	
+	if is_on_floor():
+		if Input.is_action_pressed("crouch"):
+			if Input.is_action_pressed("sprint"):
+				isSliding = true 
+			else:
+				isCrouching = true
+		elif Input.get_vector("left", "right", "up", "down").length() > 0.1:
+			if Input.is_action_pressed("sprint"):
+				isSprinting = true
+			else:
+				isWalking = true
+		else:
+			isStanding = true
+	else:
+		isJumping = true
 
-func get_direction() -> String:
+func handle_state_behavior():
+	if isStanding:
+		speed = 0.0
+		handle_height(false)
+	if isWalking:
+		speed = SPEEDS["walk"]
+		handle_height(false)
+	if isSprinting:
+		speed = SPEEDS["sprint"]
+	if isCrouching:
+		speed = SPEEDS["crouch"]
+		handle_height(true)
+	if isSliding:
+		speed = SPEEDS["slide"]
+		handle_height(true)
+
+func handle_direction() -> String:
 	var forward = head.global_transform.basis.z.normalized() * -1 
 
 	# Determine the direction based on the forward vector
 	var degrees = rad_to_deg(atan2(forward.x, forward.z)) 
-	var direction = ""
 
 	if degrees < 0:
 		degrees += 360
@@ -100,69 +132,57 @@ func get_direction() -> String:
 		degrees -= 360  
 
 	if degrees >= 337.5 or degrees < 22.5:
-		direction = "N"
+		return "N"
 	elif degrees >= 22.5 and degrees < 67.5:
-		direction = "NE"
+		return "NE"
 	elif degrees >= 67.5 and degrees < 112.5:
-		direction = "E"
+		return "E"
 	elif degrees >= 112.5 and degrees < 157.5:
-		direction = "SE"
+		return "SE"
 	elif degrees >= 157.5 and degrees < 202.5:
-		direction = "S"
+		return "S"
 	elif degrees >= 202.5 and degrees < 247.5:
-		direction = "SW"
+		return "SW"
 	elif degrees >= 247.5 and degrees < 292.5:
-		direction = "W"
+		return "W"
 	elif degrees >= 292.5 and degrees < 337.5:
-		direction = "NW"
-
-	return direction
+		return "NW"
+	else:
+		return ""
 
 func handle_mouselook(event: InputEvent):
 	head.rotate_y(-event.relative.x * (sensitivity / 1000))
 	cam.rotate_x(-event.relative.y * (sensitivity / 1000))
 	cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+	
+	mouse_movement = Vector2.ZERO
 
 func handle_movement(delta: float):
-	var input = Input.get_vector("left", "right", "up", "down")
+	var input = Input.get_vector("left", "right", "up", "down").normalized()
 	var direction = (head.transform.basis * Vector3(input.x, 0, input.y)).normalized()
-	input = input.normalized()
 	
 	if is_on_floor():
 		if direction:
-			velocity.x = direction.x * speed
-			velocity.z = direction.z * speed
+			velocity.x = lerp(velocity.x, direction.x * speed, acceleration * delta)
+			velocity.z = lerp(velocity.z, direction.z * speed, acceleration * delta)
 		else:
-			velocity.x = lerp(velocity.x, direction.x * speed, friction * delta)
-			velocity.z = lerp(velocity.z, direction.z * speed, friction * delta)
+			# Inertia
+			velocity.x = lerp(velocity.x, 0.0, deceleration * delta)
+			velocity.z = lerp(velocity.z, 0.0, deceleration * delta)
 	else:
-		# Inertia
 		velocity.x = lerp(velocity.x, direction.x * speed, air_control * delta)
 		velocity.z = lerp(velocity.z, direction.z * speed, air_control * delta)
 
 func handle_jumping(delta: float):
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump"):
-			# Handle jump
 			velocity.y = jump_velocity
 	else:
-		# Add the gravity
-		velocity.y -= gravity * delta
-
-func handle_state():
-	if is_on_floor():
-		if Input.is_action_pressed("crouch"):
-			current_state = PlayerState.SLIDING if Input.is_action_pressed("sprint") else PlayerState.CROUCHING
-		elif velocity.length() > 0.25:
-			current_state = PlayerState.SPRINTING if Input.is_action_pressed("sprint") else PlayerState.WALKING
-		else:
-			current_state = PlayerState.IDLE
-	else:
-		current_state = PlayerState.JUMPING if velocity.y > 0 else PlayerState.FALLING
+		velocity.y -= gravity * gravity_mult * delta
 
 func handle_fov(delta):
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPEEDS["sprint"] * 2)
-	var target_fov = fov + (fov_change * velocity_clamped * (1 if handle_state_behavior(current_state) == "SPRINTING" else 0))
+	var target_fov = fov + (fov_change * velocity_clamped * (1 if isSprinting else 0))
 	cam.fov = lerp(cam.fov, target_fov, 8.0 * delta)
 
 func handle_height(crouching: bool):
@@ -179,8 +199,8 @@ func emit_debug():
 	debug_info.emit(
 		global_transform.origin, 
 		mouse_movement, 
-		handle_state_behavior(current_state), 
+		state_to_str(), 
 		velocity, 
-		get_direction(), 
+		handle_direction(), 
 		fps
 		)

@@ -24,7 +24,7 @@ func _on_player_debug_info(player_pos, mouse_pos, state, velocity, direction, fp
 	
 	$VBoxContainer/MouseCoordinatesLabel.text = "Mouse: %.0v" % mouse_pos
 	
-	$VBoxContainer/CurrentStateLabel.text = "State: %s" % state
+	$VBoxContainer/CurrentStateLabel.text = state
 
 	$VBoxContainer/VelocityLabel.text = "Velocity: %.2v" % velocity
 	
