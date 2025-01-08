@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsyeqnxbnfm4v"
-path="res://.godot/imported/teleport_icon.png-bdd4874dd07a0b93cc7d077305b934ac.ctex"
+uid="uid://c7fr82f0qncx4"
+path="res://.godot/imported/dash_icon.png-d7d35a7012eb4da9463c0c799d9451b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Media/teleport_icon.png"
-dest_files=["res://.godot/imported/teleport_icon.png-bdd4874dd07a0b93cc7d077305b934ac.ctex"]
+source_file="res://Media/Abilities/dash_icon.png"
+dest_files=["res://.godot/imported/dash_icon.png-d7d35a7012eb4da9463c0c799d9451b8.ctex"]
 
 [params]
 

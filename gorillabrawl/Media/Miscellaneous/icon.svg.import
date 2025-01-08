@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://do13uud63yqic"
-path="res://.godot/imported/elytra_icon.png-942fd8de1495d5c4b4a585b6998ca6da.ctex"
+uid="uid://n8el7ge6exgu"
+path="res://.godot/imported/icon.svg-193dab7a44d3b7143926db847b53da52.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Media/elytra_icon.png"
-dest_files=["res://.godot/imported/elytra_icon.png-942fd8de1495d5c4b4a585b6998ca6da.ctex"]
+source_file="res://Media/Miscellaneous/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-193dab7a44d3b7143926db847b53da52.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

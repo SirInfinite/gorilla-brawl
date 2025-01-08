@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cidc8djtr1k5x"]
 
-[ext_resource type="Script" path="res://Scripts/player.gd" id="1_3vpqe"]
-[ext_resource type="PackedScene" uid="uid://vt24i54eww7w" path="res://Scenes/debug_labels.tscn" id="2_girxk"]
-[ext_resource type="PackedScene" uid="uid://r0o8m51p2awr" path="res://Scenes/pause_menu.tscn" id="3_iwj3a"]
+[ext_resource type="Script" path="res://Scripts/Gameplay/player.gd" id="1_3vpqe"]
+[ext_resource type="PackedScene" uid="uid://vt24i54eww7w" path="res://Scenes/UI/debug_labels.tscn" id="2_girxk"]
+[ext_resource type="PackedScene" uid="uid://r0o8m51p2awr" path="res://Scenes/UI/pause_menu.tscn" id="3_iwj3a"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c0iwr"]
 

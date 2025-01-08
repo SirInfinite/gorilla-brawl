@@ -103,6 +103,8 @@ func handle_state():
 			isStanding = true
 	else:
 		isJumping = true
+		if Input.is_action_pressed("sprint"):
+				isSprinting = true
 
 func handle_state_behavior():
 	if isStanding:

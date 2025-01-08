@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="GorillaBrawl"
-run/main_scene="res://Scenes/test_map1.tscn"
+run/main_scene="res://Scenes/Levels/test_map1.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://Media/icon.svg"
+config/icon="res://Media/Miscellaneous/icon.svg"
 
 [display]
 
@@ -23,6 +23,7 @@ window/size/viewport_height=720
 [global_group]
 
 debug_labels=""
+hotkey_button=""
 
 [input]
 

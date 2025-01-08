@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm0lfv3ax15r7"
-path="res://.godot/imported/double_jump_icon.png-2c561e69ee7918a935c8e85bde2bac69.ctex"
+uid="uid://dsyeqnxbnfm4v"
+path="res://.godot/imported/teleport_icon.png-f27637e5bdc7968fb860bd5fd12c28c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Media/double_jump_icon.png"
-dest_files=["res://.godot/imported/double_jump_icon.png-2c561e69ee7918a935c8e85bde2bac69.ctex"]
+source_file="res://Media/Abilities/teleport_icon.png"
+dest_files=["res://.godot/imported/teleport_icon.png-f27637e5bdc7968fb860bd5fd12c28c9.ctex"]
 
 [params]
 

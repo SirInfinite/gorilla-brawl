@@ -1,9 +1,9 @@
 [gd_scene load_steps=21 format=3 uid="uid://m35ilx48hf8v"]
 
-[ext_resource type="PackedScene" uid="uid://cidc8djtr1k5x" path="res://Scenes/player.tscn" id="1_m7meh"]
-[ext_resource type="Material" uid="uid://fdnvxitsqhbg" path="res://Materials/ground.tres" id="2_br6n7"]
-[ext_resource type="Material" uid="uid://digwn8xoq6bx0" path="res://Materials/wall.tres" id="2_plva3"]
-[ext_resource type="Material" uid="uid://bhq50m62ocpub" path="res://Materials/limbo_bar.tres" id="4_g1x5s"]
+[ext_resource type="Material" uid="uid://fdnvxitsqhbg" path="res://Materials/Standard/ground.tres" id="1_abady"]
+[ext_resource type="Material" uid="uid://digwn8xoq6bx0" path="res://Materials/Standard/wall.tres" id="2_gpr64"]
+[ext_resource type="Material" uid="uid://bhq50m62ocpub" path="res://Materials/Standard/limbo_bar.tres" id="3_bjx31"]
+[ext_resource type="PackedScene" uid="uid://cidc8djtr1k5x" path="res://Scenes/Prefabs/player.tscn" id="4_3nqcj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l273"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -39,21 +39,21 @@ albedo_color = Color(0.25098, 0.25098, 1, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_qim4d"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kpn8s"]
-albedo_color = Color(0.894118, 0.352941, 0, 1)
+albedo_color = Color(1, 0.392157, 0, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_icpn0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyghl"]
-albedo_color = Color(0.85098, 0.431373, 0, 1)
+albedo_color = Color(1, 0.490196, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3rga"]
-albedo_color = Color(1, 0.580392, 0, 1)
+albedo_color = Color(1, 0.588235, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rqkld"]
-albedo_color = Color(1, 0.698039, 0, 1)
+albedo_color = Color(1, 0.686275, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bw13"]
-albedo_color = Color(0.870588, 0.772549, 0, 1)
+albedo_color = Color(1, 0.784314, 0, 1)
 
 [node name="Node3D" type="Node3D"]
 
@@ -69,31 +69,31 @@ shadow_enabled = true
 [node name="FloorMesh3D" type="CSGMesh3D" parent="Map"]
 use_collision = true
 mesh = SubResource("PlaneMesh_o1oin")
-material = ExtResource("2_br6n7")
+material = ExtResource("1_abady")
 
 [node name="WallMesh3D1" type="CSGMesh3D" parent="Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 2.5, 0)
 use_collision = true
 mesh = SubResource("BoxMesh_ftkuk")
-material = ExtResource("2_plva3")
+material = ExtResource("2_gpr64")
 
 [node name="WallMesh3D2" type="CSGMesh3D" parent="Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 2.5, 0)
 use_collision = true
 mesh = SubResource("BoxMesh_ftkuk")
-material = ExtResource("2_plva3")
+material = ExtResource("2_gpr64")
 
 [node name="WallMesh3D3" type="CSGMesh3D" parent="Map"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2.5, 15.5)
 use_collision = true
 mesh = SubResource("BoxMesh_x1ode")
-material = ExtResource("2_plva3")
+material = ExtResource("2_gpr64")
 
 [node name="WallMesh3D4" type="CSGMesh3D" parent="Map"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2.5, -15.5)
 use_collision = true
 mesh = SubResource("BoxMesh_x1ode")
-material = ExtResource("2_plva3")
+material = ExtResource("2_gpr64")
 
 [node name="BoxMesh3D1" type="CSGBox3D" parent="Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -6.5)
@@ -115,7 +115,7 @@ material = SubResource("StandardMaterial3D_n18is")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.50008, 10)
-material_override = ExtResource("4_g1x5s")
+material_override = ExtResource("3_bjx31")
 use_collision = true
 size = Vector3(1, 5, 1)
 
@@ -123,43 +123,43 @@ size = Vector3(1, 5, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 8)
 use_collision = true
 size = Vector3(1, 5, 1)
-material = ExtResource("4_g1x5s")
+material = ExtResource("3_bjx31")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.938, 9)
-material_override = ExtResource("4_g1x5s")
+material_override = ExtResource("3_bjx31")
 use_collision = true
 size = Vector3(1, 4.125, 1)
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="Map"]
-transform = Transform3D(0.0174524, -0.999848, 0, 0.999848, 0.0174524, 0, 0, 0, 1, 10, 1, -10)
+transform = Transform3D(0.980615, -0.195946, 0, 0.195946, 0.980615, 0, 0, 0, 1, 9.97547, 0.195428, -10)
 use_collision = true
 mesh = SubResource("PlaneMesh_qim4d")
 material = SubResource("StandardMaterial3D_kpn8s")
 
 [node name="CSGMesh3D2" type="CSGMesh3D" parent="Map"]
-transform = Transform3D(0.382683, -0.923879, 0, 0.923879, 0.382683, 0, 0, 0, 1, 10, 0.9, -7.5)
+transform = Transform3D(0.708339, -0.705871, 0, 0.705871, 0.708339, 0, 0, 0, 1, 9.70816, 0.711294, -7.5)
 use_collision = true
 mesh = SubResource("PlaneMesh_icpn0")
 material = SubResource("StandardMaterial3D_cyghl")
 
 [node name="CSGMesh3D3" type="CSGMesh3D" parent="Map"]
-transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 10, 0.7, -5)
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 9.716, 0.71, -5)
 use_collision = true
 mesh = SubResource("PlaneMesh_icpn0")
 material = SubResource("StandardMaterial3D_q3rga")
 
 [node name="CSGMesh3D4" type="CSGMesh3D" parent="Map"]
-transform = Transform3D(0.830984, -0.556296, 0, 0.556296, 0.830984, 0, 0, 0, 1, 10, 0.55, -2.5)
+transform = Transform3D(0.830984, -0.556296, 0, 0.556296, 0.830984, 0, 0, 0, 1, 9.835, 0.56, -2.5)
 use_collision = true
 mesh = SubResource("PlaneMesh_icpn0")
 material = SubResource("StandardMaterial3D_rqkld")
 
 [node name="CSGMesh3D5" type="CSGMesh3D" parent="Map"]
-transform = Transform3D(0.923879, -0.382683, 0, 0.382683, 0.923879, 0, 0, 0, 1, 10, 0.38, 0)
+transform = Transform3D(0.923879, -0.382683, 0, 0.382683, 0.923879, 0, 0, 0, 1, 9.925, 0.4, 0)
 use_collision = true
 mesh = SubResource("PlaneMesh_icpn0")
 material = SubResource("StandardMaterial3D_1bw13")
 
-[node name="Player" parent="." instance=ExtResource("1_m7meh")]
+[node name="Player" parent="." instance=ExtResource("4_3nqcj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

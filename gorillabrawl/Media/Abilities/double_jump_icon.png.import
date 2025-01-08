@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7fr82f0qncx4"
-path="res://.godot/imported/dash_icon.png-f3c52f8a40b2496b843a1e7e53f16e31.ctex"
+uid="uid://cm0lfv3ax15r7"
+path="res://.godot/imported/double_jump_icon.png-6c633a22d786735b6457729b78545f3c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Media/dash_icon.png"
-dest_files=["res://.godot/imported/dash_icon.png-f3c52f8a40b2496b843a1e7e53f16e31.ctex"]
+source_file="res://Media/Abilities/double_jump_icon.png"
+dest_files=["res://.godot/imported/double_jump_icon.png-6c633a22d786735b6457729b78545f3c.ctex"]
 
 [params]
 

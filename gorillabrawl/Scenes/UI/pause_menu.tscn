@@ -1,11 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://r0o8m51p2awr"]
+[gd_scene load_steps=3 format=3 uid="uid://r0o8m51p2awr"]
 
-[ext_resource type="Script" path="res://Scripts/pause_menu.gd" id="1_7hn2p"]
-[ext_resource type="Shader" path="res://Materials/pause_menu.gdshader" id="2_pu8q4"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5os0r"]
-shader = ExtResource("2_pu8q4")
-shader_parameter/blur_size = 1.0
+[ext_resource type="Script" path="res://Scripts/UI/pause_menu.gd" id="1_7hn2p"]
+[ext_resource type="PackedScene" uid="uid://ddxknnm8r6dij" path="res://Scenes/UI/options_menu.tscn" id="3_11q0p"]
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
@@ -17,13 +13,13 @@ grow_vertical = 2
 script = ExtResource("1_7hn2p")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_5os0r")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.25098, 0.25098, 0.25098, 0.501961)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,6 +34,10 @@ offset_right = 250.0
 offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -62,6 +62,10 @@ theme_override_font_sizes/font_size = 100
 text = "Quit
 "
 
+[node name="OptionsMenu" parent="." instance=ExtResource("3_11q0p")]
+layout_mode = 1
+
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="exit_options_menu" from="OptionsMenu" to="." method="_on_exit_options_menu"]

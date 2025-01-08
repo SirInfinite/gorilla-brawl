@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddxknnm8r6dij"]
+
+[ext_resource type="Script" path="res://Scripts/UI/options_menu.gd" id="1_vhgn4"]
+[ext_resource type="PackedScene" uid="uid://c8jgemn0s3klj" path="res://Scenes/UI/settings_tab_container.tscn" id="2_mlaaa"]
+
+[node name="OptionsMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vhgn4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = -48
+
+[node name="Settings_Tab_Containter" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_mlaaa")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(160, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Back
+"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
