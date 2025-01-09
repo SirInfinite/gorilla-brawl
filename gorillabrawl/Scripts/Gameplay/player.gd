@@ -161,7 +161,7 @@ func handle_mouselook(event: InputEvent):
 
 func handle_movement(delta: float):
 	var input = Input.get_vector("left", "right", "up", "down").normalized()
-	var direction = (head.transform.basis * Vector3(input.x, 0, input.y)).normalized()
+	var direction = (head.transform.basis.orthonormalized() * Vector3(input.x, 0, input.y))
 	
 	if is_on_floor():
 		if direction:
@@ -204,5 +204,6 @@ func emit_debug():
 		state_to_str(), 
 		velocity, 
 		handle_direction(), 
-		fps
+		fps,
+		(abs(velocity.x) + abs(velocity.z))
 		)

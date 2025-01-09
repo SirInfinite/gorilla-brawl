@@ -11,7 +11,7 @@ func _ready():
 	hide()  # Ensure the menu is hidden at the start
 	options_menu.hide()
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("menu"):  # "menu" is the pause action
 		if options_menu.visible == true:
 			_on_exit_options_menu()

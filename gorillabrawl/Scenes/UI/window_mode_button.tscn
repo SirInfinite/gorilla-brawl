@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cr03ix4tftwkd"]
+
+[ext_resource type="PackedScene" uid="uid://jgfp2wm6br2w" path="res://Scenes/UI/options_display_button.tscn" id="1_2pfou"]
+[ext_resource type="Script" path="res://Scripts/UI/window_mode_button.gd" id="2_0pry5"]
+
+[node name="Window_Mode_Button" instance=ExtResource("1_2pfou")]
+script = ExtResource("2_0pry5")
+
+[node name="Label" parent="HBoxContainer" index="0"]
+text = "Window Mode"
+
+[connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_window_mode_selected"]

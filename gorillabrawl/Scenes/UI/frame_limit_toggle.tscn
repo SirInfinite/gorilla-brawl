@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://jwvk6o55kc8p"]
+
+[ext_resource type="PackedScene" uid="uid://jgfp2wm6br2w" path="res://Scenes/UI/options_display_button.tscn" id="1_pa8vx"]
+[ext_resource type="Script" path="res://frame_limit_button.gd" id="2_44m83"]
+
+[node name="Frame_Limit_Toggle" instance=ExtResource("1_pa8vx")]
+script = ExtResource("2_44m83")
+
+[node name="Label" parent="HBoxContainer" index="0"]
+text = "Frame Limit On"
+
+[connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_choice_selected"]
