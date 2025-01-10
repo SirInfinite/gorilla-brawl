@@ -96,21 +96,21 @@ mesh = SubResource("BoxMesh_x1ode")
 material = ExtResource("2_gpr64")
 
 [node name="BoxMesh3D1" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.4, -6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -6.5)
 use_collision = true
-size = Vector3(4, 0.8, 4)
+size = Vector3(4, 1, 4)
 material = SubResource("StandardMaterial3D_ow54r")
 
 [node name="BoxMesh3D2" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1, 0)
 use_collision = true
-size = Vector3(4, 1.6, 4)
+size = Vector3(4, 2, 4)
 material = SubResource("StandardMaterial3D_0age1")
 
 [node name="BoxMesh3D3" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.2, 6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, 6.5)
 use_collision = true
-size = Vector3(4, 2.4, 4)
+size = Vector3(4, 3, 4)
 material = SubResource("StandardMaterial3D_n18is")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Map"]
@@ -164,3 +164,19 @@ material = SubResource("StandardMaterial3D_1bw13")
 [node name="Player" parent="." instance=ExtResource("4_3nqcj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 floor_snap_length = 1.0
+isStanding = false
+isWalking = false
+isSprinting = false
+isJumping = false
+isCrouching = false
+isSliding = false
+sensitivity = 1.0
+fov = 75.0
+fov_change = 1.5
+speed = 0.0
+acceleration = 15.0
+deceleration = 8.5
+gravity_mult = 1.0
+jump_velocity = 4.5
+air_control = 2.0
+coyote_time_dur = 0.1

@@ -2,6 +2,13 @@ extends CharacterBody3D
 
 signal debug_info
 
+# References
+@onready var head := $Head
+@onready var cam := $Head/Camera3D
+@onready var hitbox := $CollisionShape3D
+@onready var body := $MeshInstance3D
+@onready var roof_raycast = $RoofRaycast
+
 @export_category("States")
 @export var isStanding := false
 @export var isWalking := false
@@ -10,22 +17,18 @@ signal debug_info
 @export var isCrouching := false
 @export var isSliding := false
 
-@export_category("References")
-@onready var head := $Head
-@onready var cam := $Head/Camera3D
-@onready var hitbox := $CollisionShape3D
-@onready var body := $MeshInstance3D
-
 @export_category("Camera")
 @export var sensitivity := 1.0
 @export var fov := 75.0
 @export var fov_change := 1.5
+var lowerCameraClamp = -90
+var higherCameraClamp = 90
 var mouse_movement := Vector2.ZERO
 
 @export_category("Walking")
-@export var speed := 0.0
-@export var acceleration := 20.0
-@export var deceleration := 10.0
+@export var speed : float
+@export var acceleration := 15.0
+@export var deceleration := 8.5
 const SPEEDS := {
 	"walk": 5.0,
 	"sprint": 8.0,
@@ -37,13 +40,18 @@ const SPEEDS := {
 const gravity := 9.8 # m/s^2
 @export var gravity_mult := 1.0
 @export var jump_velocity := 4.5
-@export var air_control := 3.0
+@export var air_control := 2.0
+@export var coyote_time_dur := 0.1
+var coyote_time := 0.0
+var was_on_floor := false
 
 @export_category("Miscellaneous")
+var crouchReleaseTimer := 0.0
 var fps : float
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	get_tree().paused = false
 	velocity = Vector3.ZERO
 
 func _process(_delta : float):
@@ -52,7 +60,7 @@ func _process(_delta : float):
 func _physics_process(delta: float):
 	handle_movement(delta)
 	handle_jumping(delta)
-	handle_state()
+	handle_state(delta)
 	handle_state_behavior()
 	handle_fov(delta)
 	
@@ -66,49 +74,63 @@ func _unhandled_input(event: InputEvent) -> void:
 			handle_mouselook(event)
 			mouse_movement = event.relative
 
-func state_to_str():
-	if isStanding:
-		return "isStanding"
-	if isWalking:
-		return "isWalking"
-	if isSprinting:
-		return "isSprinting"
-	if isJumping:
-		return "isJumping"
-	if isCrouching:
-		return "isCrouching"
-	if isSliding:
-		return "isSliding"
+func apply_over_time(starting_value, end_value, increment_value, mode: String = "add"):
+	if (mode == "add"):
+		if (starting_value < end_value):
+			starting_value += increment_value
+		else:
+			starting_value = end_value
+	elif (mode == "subtract"):
+		if (starting_value > end_value):
+			starting_value -= increment_value
+		else:
+			starting_value = end_value
+	elif (mode == "multiply"):
+		if (starting_value < end_value):
+			starting_value *= increment_value
+		else:
+			starting_value = end_value
+	elif (mode == "divide"):
+		if (starting_value > end_value):
+			starting_value /= increment_value
+		else:
+			starting_value = end_value
+	
+	return starting_value
 
-func handle_state():
-	isStanding = false
-	isWalking = false
-	isSprinting = false
-	isJumping = false
-	isCrouching = false
-	isSliding = false
+func handle_state(delta):
+	isSprinting = Input.is_action_pressed("sprint")
+	
+	if Input.is_action_pressed("crouch"):
+		isCrouching = true
+	else:
+		if not roof_raycast.is_colliding():
+			crouchReleaseTimer += delta
+			if crouchReleaseTimer >= 0.1:
+				isCrouching = false
+		else:
+			crouchReleaseTimer = 0.0
+	
+	isWalking = is_on_floor() and Input.get_vector("left", "right", "up", "down").length() > 0.1
+	
+	isStanding = not isWalking and is_on_floor()
+	
+	isSliding = isSprinting and isCrouching
+	
+	isJumping = not is_on_floor()
 	
 	if is_on_floor():
-		if Input.is_action_pressed("crouch"):
-			if Input.is_action_pressed("sprint"):
-				isSliding = true 
-			else:
-				isCrouching = true
-		elif Input.get_vector("left", "right", "up", "down").length() > 0.1:
-			if Input.is_action_pressed("sprint"):
-				isSprinting = true
-			else:
-				isWalking = true
+		if Input.get_vector("left", "right", "up", "down").length() > 0.1:
+			isWalking = true
+			isStanding = false
 		else:
 			isStanding = true
+			isWalking = false
 	else:
 		isJumping = true
-		if Input.is_action_pressed("sprint"):
-				isSprinting = true
 
 func handle_state_behavior():
 	if isStanding:
-		speed = 0.0
 		handle_height(false)
 	if isWalking:
 		speed = SPEEDS["walk"]
@@ -155,16 +177,16 @@ func handle_direction() -> String:
 func handle_mouselook(event: InputEvent):
 	head.rotate_y(-event.relative.x * (sensitivity / 1000))
 	cam.rotate_x(-event.relative.y * (sensitivity / 1000))
-	cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+	cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(lowerCameraClamp), deg_to_rad(higherCameraClamp))
 	
 	mouse_movement = Vector2.ZERO
 
 func handle_movement(delta: float):
-	var input = Input.get_vector("left", "right", "up", "down").normalized()
-	var direction = (head.transform.basis.orthonormalized() * Vector3(input.x, 0, input.y))
+	var input = Input.get_vector("left", "right", "up", "down")
+	var direction = (head.transform.basis * Vector3(input.x, 0, input.y)).normalized()
 	
 	if is_on_floor():
-		if direction:
+		if direction != Vector3.ZERO:
 			velocity.x = lerp(velocity.x, direction.x * speed, acceleration * delta)
 			velocity.z = lerp(velocity.z, direction.z * speed, acceleration * delta)
 		else:
@@ -177,31 +199,41 @@ func handle_movement(delta: float):
 
 func handle_jumping(delta: float):
 	if is_on_floor():
-		if Input.is_action_just_pressed("jump"):
-			velocity.y = jump_velocity
+		coyote_time = coyote_time_dur
 	else:
 		velocity.y -= gravity * gravity_mult * delta
+		
+		if coyote_time > 0:
+			coyote_time -= delta
+	
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor() or coyote_time > 0:
+			velocity.y = jump_velocity
+			coyote_time = 0
 
 func handle_fov(delta):
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPEEDS["sprint"] * 2)
 	var target_fov = fov + (fov_change * velocity_clamped * (1 if isSprinting else 0))
 	cam.fov = lerp(cam.fov, target_fov, 8.0 * delta)
+	
+	var target_rotation = deg_to_rad(900) if isSliding else cam.rotation_degrees.x
+	cam.rotation_degrees.x = lerp(cam.rotation_degrees.x, target_rotation, 8.0 * delta)
 
 func handle_height(crouching: bool):
 	var capsule_shape = hitbox.shape as CapsuleShape3D
+	
 	if crouching:
+		# capsule_shape.height = apply_over_time(capsule_shape.height, 0.5, 0.15, "subtract")
 		capsule_shape.height = 0.5
-		body.scale = Vector3(1, 0.5, 1)
 	else: 
-		capsule_shape.height = 1.0
-		body.scale = Vector3(1, 1, 1)
+		# capsule_shape.height = apply_over_time(capsule_shape.height, 1, 0.15, "add")
+		capsule_shape.height = 1
 	hitbox.shape = capsule_shape
 
 func emit_debug():
 	debug_info.emit(
 		global_transform.origin, 
 		mouse_movement, 
-		state_to_str(), 
 		velocity, 
 		handle_direction(), 
 		fps,

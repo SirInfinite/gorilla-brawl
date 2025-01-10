@@ -6,7 +6,7 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c0iwr"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f3nms"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gn7o1"]
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3vpqe")
@@ -15,7 +15,7 @@ script = ExtResource("1_3vpqe")
 mesh = SubResource("CapsuleMesh_c0iwr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_f3nms")
+shape = SubResource("CapsuleShape3D_gn7o1")
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -28,9 +28,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 process_mode = 3
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_iwj3a")]
-
-[node name="RoofRaycast" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.017, 0.5, -0.003)
-target_position = Vector3(0, 1, 0)
 
 [connection signal="debug_info" from="." to="DebugLabels" method="_on_player_debug_info"]

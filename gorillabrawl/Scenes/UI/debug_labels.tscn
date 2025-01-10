@@ -15,9 +15,6 @@ layout_mode = 2
 [node name="MouseCoordinatesLabel" type="Label" parent="VBoxContainer" groups=["debug_labels"]]
 layout_mode = 2
 
-[node name="CurrentStateLabel" type="Label" parent="VBoxContainer" groups=["debug_labels"]]
-layout_mode = 2
-
 [node name="VelocityLabel" type="Label" parent="VBoxContainer" groups=["debug_labels"]]
 layout_mode = 2
 

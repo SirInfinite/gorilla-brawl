@@ -19,12 +19,10 @@ func toggle_debug_label(visibility: bool):
 	for label in get_tree().get_nodes_in_group("debug_labels"):
 		label.visible = visibility
 
-func _on_player_debug_info(player_pos, mouse_pos, state, velocity, direction, fps, speed):
+func _on_player_debug_info(player_pos, mouse_pos, velocity, direction, fps, speed):
 	$VBoxContainer/CoordinatesLabel.text = "Position: %.2v" % player_pos
 	
 	$VBoxContainer/MouseCoordinatesLabel.text = "Mouse: %.0v" % mouse_pos
-	
-	$VBoxContainer/CurrentStateLabel.text = state
 
 	$VBoxContainer/VelocityLabel.text = "Velocity: %.2v" % velocity
 	
