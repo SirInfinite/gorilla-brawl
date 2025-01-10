@@ -7,7 +7,7 @@ signal debug_info
 @onready var cam := $Head/Camera3D
 @onready var hitbox := $CollisionShape3D
 @onready var body := $MeshInstance3D
-@onready var roof_raycast = $RoofRaycast
+@onready var roofRaycast = $RoofRaycast
 
 @export_category("States")
 @export var isStanding := false
@@ -20,10 +20,10 @@ signal debug_info
 @export_category("Camera")
 @export var sensitivity := 1.0
 @export var fov := 75.0
-@export var fov_change := 1.5
+@export var fovChange := 1.5
 var lowerCameraClamp = -90
 var higherCameraClamp = 90
-var mouse_movement := Vector2.ZERO
+var mouseMovement := Vector2.ZERO
 
 @export_category("Walking")
 @export var speed : float
@@ -38,16 +38,17 @@ const SPEEDS := {
 
 @export_category("Jumping")
 const gravity := 9.8 # m/s^2
-@export var gravity_mult := 1.0
-@export var jump_velocity := 4.5
-@export var air_control := 2.0
-@export var coyote_time_dur := 0.1
-var coyote_time := 0.0
-var was_on_floor := false
+@export var gravityMult := 1.0
+@export var jumpVelocity := 4.5
+@export var airControl := 2.0
+@export var coyoteTimeDur := 0.1
+var coyoteTime := 0.0
+var wasOnFloor := false
 
 @export_category("Miscellaneous")
 var crouchReleaseTimer := 0.0
 var fps : float
+var thirdPerson
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -72,7 +73,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			handle_mouselook(event)
-			mouse_movement = event.relative
+			mouseMovement = event.relative
 
 func apply_over_time(starting_value, end_value, increment_value, mode: String = "add"):
 	if (mode == "add"):
@@ -104,7 +105,7 @@ func handle_state(delta):
 	if Input.is_action_pressed("crouch"):
 		isCrouching = true
 	else:
-		if not roof_raycast.is_colliding():
+		if not roofRaycast.is_colliding():
 			crouchReleaseTimer += delta
 			if crouchReleaseTimer >= 0.1:
 				isCrouching = false
@@ -179,7 +180,7 @@ func handle_mouselook(event: InputEvent):
 	cam.rotate_x(-event.relative.y * (sensitivity / 1000))
 	cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(lowerCameraClamp), deg_to_rad(higherCameraClamp))
 	
-	mouse_movement = Vector2.ZERO
+	mouseMovement = Vector2.ZERO
 
 func handle_movement(delta: float):
 	var input = Input.get_vector("left", "right", "up", "down")
@@ -194,27 +195,26 @@ func handle_movement(delta: float):
 			velocity.x = lerp(velocity.x, 0.0, deceleration * delta)
 			velocity.z = lerp(velocity.z, 0.0, deceleration * delta)
 	else:
-		velocity.x = lerp(velocity.x, direction.x * speed, air_control * delta)
-		velocity.z = lerp(velocity.z, direction.z * speed, air_control * delta)
+		velocity.x = lerp(velocity.x, direction.x * speed, airControl * delta)
+		velocity.z = lerp(velocity.z, direction.z * speed, airControl * delta)
 
 func handle_jumping(delta: float):
 	if is_on_floor():
-		coyote_time = coyote_time_dur
+		coyoteTime = coyoteTimeDur
 	else:
-		velocity.y -= gravity * gravity_mult * delta
+		velocity.y -= gravity * gravityMult * delta
 		
-		if coyote_time > 0:
-			coyote_time -= delta
+		if coyoteTime > 0:
+			coyoteTime -= delta
 	
 	if Input.is_action_just_pressed("jump"):
-		if is_on_floor() or coyote_time > 0:
-			velocity.y = jump_velocity
-			coyote_time = 0
+		if is_on_floor() or coyoteTime > 0:
+			velocity.y = jumpVelocity
+			coyoteTime = 0
 
 func handle_fov(delta):
-	var velocity_clamped = clamp(velocity.length(), 0.5, SPEEDS["sprint"] * 2)
-	var target_fov = fov + (fov_change * velocity_clamped * (1 if isSprinting else 0))
-	cam.fov = lerp(cam.fov, target_fov, 8.0 * delta)
+	var targetFOV = fov + (fovChange * (1 if isSprinting else 0))
+	cam.fov = lerp(cam.fov, targetFOV, 8.0 * delta)
 	
 	var target_rotation = deg_to_rad(900) if isSliding else cam.rotation_degrees.x
 	cam.rotation_degrees.x = lerp(cam.rotation_degrees.x, target_rotation, 8.0 * delta)
@@ -233,7 +233,7 @@ func handle_height(crouching: bool):
 func emit_debug():
 	debug_info.emit(
 		global_transform.origin, 
-		mouse_movement, 
+		mouseMovement, 
 		velocity, 
 		handle_direction(), 
 		fps,
