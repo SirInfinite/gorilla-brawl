@@ -24,6 +24,9 @@ layout_mode = 2
 [node name="SpeedLabel" type="Label" parent="VBoxContainer" groups=["debug_labels"]]
 layout_mode = 2
 
+[node name="StatesLabel" type="Label" parent="VBoxContainer" groups=["debug_labels"]]
+layout_mode = 2
+
 [node name="FacingDirectionLabel" type="Label" parent="." groups=["debug_labels"]]
 anchors_preset = 5
 anchor_left = 0.5
