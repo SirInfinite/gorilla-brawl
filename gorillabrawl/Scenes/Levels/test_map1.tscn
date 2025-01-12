@@ -5,16 +5,18 @@
 [ext_resource type="Material" uid="uid://bhq50m62ocpub" path="res://Materials/Standard/limbo_bar.tres" id="3_bjx31"]
 [ext_resource type="PackedScene" uid="uid://cidc8djtr1k5x" path="res://Scenes/Prefabs/player.tscn" id="4_3nqcj"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l273"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_awifw"]
+sky_top_color = Color(0.347409, 0.445826, 0.645836, 1)
+sky_horizon_color = Color(0.64759, 0.68197, 0.758165, 1)
+ground_bottom_color = Color(0.242952, 0.282055, 0.386826, 1)
+ground_horizon_color = Color(0.64759, 0.68197, 0.758165, 1)
 
-[sub_resource type="Sky" id="Sky_72iwr"]
-sky_material = SubResource("ProceduralSkyMaterial_3l273")
+[sub_resource type="Sky" id="Sky_glx0k"]
+sky_material = SubResource("ProceduralSkyMaterial_awifw")
 
-[sub_resource type="Environment" id="Environment_ukbw1"]
+[sub_resource type="Environment" id="Environment_3wnyd"]
 background_mode = 2
-sky = SubResource("Sky_72iwr")
+sky = SubResource("Sky_glx0k")
 tonemap_mode = 2
 glow_enabled = true
 
@@ -58,7 +60,7 @@ albedo_color = Color(1, 0.784314, 0, 1)
 [node name="Node3D" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ukbw1")
+environment = SubResource("Environment_3wnyd")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
@@ -164,4 +166,5 @@ material = SubResource("StandardMaterial3D_1bw13")
 [node name="Player" parent="." instance=ExtResource("4_3nqcj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 floor_snap_length = 1.0
+do_slide = false
 fov_change = 5.0

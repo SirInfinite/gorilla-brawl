@@ -12,7 +12,7 @@ func _ready():
 	options_menu.hide()
 
 func _process(_delta):
-	if Input.is_action_just_pressed("menu"):  # "menu" is the pause action
+	if Input.is_action_just_pressed("esc"):  
 		if options_menu.visible == true:
 			_on_exit_options_menu()
 		else:

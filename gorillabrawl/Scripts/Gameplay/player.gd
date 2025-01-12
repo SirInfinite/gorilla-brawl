@@ -44,7 +44,9 @@ const gravity := 9.8 # m/s^2
 @export var jump_velocity := 4.5
 @export var air_control := 2.0
 @export var coyote_time_duration := 0.1
+@export var max_jumps := 2
 var coyote_time := 0.0
+var jump_count := 0
 
 @export_category("Camera")
 @export var sensitivity := 0.003
@@ -59,7 +61,6 @@ var mouse_movement := Vector2.ZERO
 
 # Miscellaneous
 var fps : float
-var third_person
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -112,13 +113,16 @@ func handle_state(delta: float):
 func handle_state_behavior(delta: float):
 	handle_height(delta)
 	if ["isStanding"]:
-		pass
+		fov_change = 0.0
 	if states["isWalking"]:
 		speed = walk_speed
+		fov_change = 0.0
 	if states["isSprinting"]:
 		speed = sprintSpeed
+		fov_change = 15.0
 	if states["isCrouching"]:
 		speed = crouch_speed
+		fov_change = -10.0
 	if states["isSliding"]:
 		speed = slide_speed
 
@@ -178,24 +182,29 @@ func handle_movement(delta: float):
 func handle_jumping(delta: float):
 	if is_on_floor():
 		coyote_time = coyote_time_duration
+		jump_count = 0
 	else:
 		velocity.y -= gravity * gravity_mult * delta
 		
 		if coyote_time > 0:
 			coyote_time -= delta
 	
-	if Input.is_action_just_pressed("jump") and (is_on_floor() or coyote_time > 0):
-		velocity.y = jump_velocity
-		coyote_time = 0
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor() or coyote_time > 0:
+			velocity.y = jump_velocity
+			coyote_time = 0  
+		elif jump_count < max_jumps - 1:
+			velocity.y = jump_velocity
+			jump_count += 1
 
-func handle_fov(delta):
-	var targetFOV = fov + (fov_change if states["isSprinting"] else 0)
+func handle_fov(delta: float):
+	var targetFOV = fov + fov_change
 	cam.fov = lerp(cam.fov, targetFOV, 8.0 * delta)
 	
 	var target_rotation = deg_to_rad(-10) if states["isSliding"] else cam.rotation_degrees.x
 	cam.rotation_degrees.x = lerp(cam.rotation_degrees.x, target_rotation, 8.0 * delta)
 
-func handle_height(delta):
+func handle_height(delta: float):
 	var capsule_shape = hitbox.shape
 	
 	capsule_shape.height = lerp(capsule_shape.height, 0.5 if states["isCrouching"] else (0.4 if states["isSliding"] else 1.0), 10.0 * delta)
